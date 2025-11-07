@@ -76,3 +76,16 @@ class FashionAgent:
 	async def respond(self,session_id:str, message:str)->Tuple[str,dict]:
 		session_data=self._ensure_session(session_id)
 		chat_chain=session_data["chat_chain"]
+		user_profile = session_data["user_profile"]
+
+		profile_string = self._get_profile_as_string(user_profile)
+
+		answer: str= await chat_chain.apredict(
+			system=CHAT_SYSTEM_PROMPT,
+			user_profile=profile_string,
+			input=message
+		)
+		print(f"--- Would update profile for session {session_id} based on: '{message}' ---")
+		return answer, {"session_id" : session_id}
+
+

@@ -1,33 +1,33 @@
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-
+from fastapi import APIRouter, Depends
+from pydantic import BaseModel, Field
 from ..services.fashion_agent import FashionAgent
 
+class ChatRequest (BaseModel):
+	session_id: str=Field (..., description="Unique id for the conversation")
+	message: str = Field(..., description="User's Message")
 
-class ChatRequest(BaseModel):
+class ChatResponse (BaseModel):
 	session_id: str
-	message: str
-	user_profile: dict | None = None
+	answer:str
 
+router = APIRouter()
 
-class ChatResponse(BaseModel):
-	answer: str
-	context: dict | None = None
+agent_singleton= FashionAgent()
 
+def get_agent() -> FashionAgent:
+	return agent_singleton
 
-router = APIRouter(prefix="/chat", tags=["chat"])
-agent = FashionAgent()
-
-
-@router.post("", response_model=ChatResponse)
-async def chat(req: ChatRequest) -> ChatResponse:
-	try:
-		answer, context = await agent.respond(
-			session_id=req.session_id,
-			message=req.message,
-			user_profile=req.user_profile or {},
-		)
-		return ChatResponse(answer=answer, context=context)
-	except Exception as exc:
-		raise HTTPException(status_code=500, detail=str(exc))
+@router.post("/chat", response_model=ChatResponse)
+async def chat_with_agent(
+		request: ChatRequest,
+		agent: FashionAgent = Depends(get_agent)
+):
+	answer, metadata = await agent.respond(
+		session_id=request.session_id,
+		message=request.message
+	)
+	return ChatResponse(
+		session_id=metadata.get("session_id", request.session_id),
+		answer=answer
+	)
 
