@@ -22,6 +22,7 @@ async def chat_with_agent(
 		request: ChatRequest,
 		agent: FashionAgent = Depends(get_agent)
 ):
+
 	answer, metadata = await agent.respond(
 		session_id=request.session_id,
 		message=request.message
