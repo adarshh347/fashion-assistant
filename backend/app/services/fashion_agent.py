@@ -17,12 +17,15 @@ class FashionAgent:
        # --- FIX IS HERE ---
        # Initialized with an underscore to match the rest of the class
        self._sessions: Dict[str, Dict[str,Any]]={}
+    #     A simple Python dictionary running inside the uvicorn process.
 
     def _get_profile_as_string(self, user_profile: Dict[str,Any])->str:
        if not user_profile:
           return "no preferences known yet"
        return "\n".join(f"- {key}: {', '.join(value) if isinstance(value, list) else value}"
                     for key, value in user_profile.items())
+
+
 
     def _ensure_session(self, session_id: str) -> Dict[str, Any]:
        """
