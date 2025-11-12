@@ -38,7 +38,8 @@ class FashionAgent:
        # --- 1. Create the Main Chat Chain ---
        chat_memory = ConversationBufferMemory(
           memory_key="history",
-          return_messages=False
+          return_messages=False,
+          input_key="input"
        )
 
        chat_prompt = PromptTemplate(
