@@ -7,3 +7,15 @@ dist/
 .env
 *.log
 
+# Ignore files generated INSIDE the backend folder
+
+# 1. Vector Database (ChromaDB)
+backend/chroma_db_data/
+
+# 2. Local Caches (Pycache and common local files)
+backend/.cache/
+.venv/
+__pycache__/
+
+# 3. Downloads/Models (If Chroma or other tools saved models inside backend)
+backend/models/
