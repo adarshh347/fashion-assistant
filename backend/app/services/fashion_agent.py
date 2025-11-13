@@ -53,7 +53,76 @@ class FashionAgent:
       response = await self.llm.ainvoke(prompt_messages)
       return {"messages": [response]}
 
-#    complete the fashion_agent
+# the profiler node- the node analyses the messages to update the user profile
+   async def _profiler_node(self, state:AgentState):
+       messages = state["messages"]
+       current_profile = state.get("user_profile",{})
+
+       # we only analyse last few messages to save tokens
+       recent_conversation = messages[-3:]
+       # create a specialised llm that forces "userprofile" output
+       structured_llm = self.llm.with_structured_output(UserProfile)
+
+       extractor_prompt = ChatPromptTemplate.from_messages([
+           ("system", "You are an expert data analyst. Extract user fashion preferences from the conversation. "
+                      "Update the profile only if new info is found. If nothing new, leave fields empty."),
+           ("placeholder", "{messages}")
+       ])
+
+       # run the extraction chain
+       chain= extractor_prompt | structured_llm
+       extracted_data:UserProfile = await chain.ainvoke({"messages": recent_conversation})
+
+       updated_profile = current_profile.copy()
+
+       if extracted_data.name:
+           updated_profile["name"] = extracted_data.name
+       if extracted_data.budget_tier:
+           updated_profile["budget_tier"] = extracted_data.budget_tier
+       for key in ["style_keywords", "clothing_types_liked", "colors"]:
+           new_items = getattr(extracted_data, key)
+           if new_items:
+               existing = set(updated_profile.get(key, []))
+               existing.update(new_items)
+               updated_profile[key] = list(existing)
+
+       print(f"--- 🕵️ Profiler Update: {updated_profile} ---")
+       return {"user_profile": updated_profile}
+
+   async def respond(self, session_id: str, message: str) -> tuple[str, dict]:
+       """
+       Main entry point for the API.
+       """
+       # 1. Load or Initialize Session State
+       if session_id not in self._sessions:
+           self._sessions[session_id] = {
+               "messages": [],
+               "user_profile": {}
+           }
+
+       current_state = self._sessions[session_id]
+
+       # 2. Add the user's new message to the state
+       current_state["messages"].append(HumanMessage(content=message))
+
+       # 3. Run the Graph!
+       # The graph handles the flow: Chatbot -> Profiler -> End
+       final_state = await self.graph.ainvoke(current_state)
+
+       # 4. Save the updated state back to memory
+       self._sessions[session_id] = final_state
+
+       # 5. Return the chatbot's response (the last message)
+       bot_response = final_state["messages"][-1].content
+       return bot_response, {"session_id": session_id}
+
+       
+
+
+
+
+
+
 
 
 
