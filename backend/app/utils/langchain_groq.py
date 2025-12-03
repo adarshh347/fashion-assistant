@@ -4,7 +4,7 @@ from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 
 
-def get_groq_chat_llm(model_name: str = "llama-3.1-8b-instant", temperature: float = 0.7) -> BaseLanguageModel:
+def get_groq_chat_llm(model_name: str = "llama-3.3-70b-versatile", temperature: float = 0.7) -> BaseLanguageModel:
     """
     Initializes and returns an instance of the ChatGroq LLM.
 
