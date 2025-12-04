@@ -23,7 +23,7 @@ class GarmentAnalyzer:
         print("🎨 Initializing GarmentAnalyzer...")
         # Use vision model for image analysis
         self.vision_llm = get_groq_chat_llm(
-            model_name="llama-3.2-11b-vision-preview", 
+            model_name="meta-llama/llama-4-maverick-17b-128e-instruct", 
             temperature=0.3  # Lower temperature for more consistent structured output
         )
         # Text model for hybrid recommendations
@@ -34,7 +34,7 @@ class GarmentAnalyzer:
         # Create structured output version
         self.structured_llm = self.vision_llm.with_structured_output(GarmentAnalysis)
         self.hybrid_llm = self.text_llm.with_structured_output(HybridRecommendation)
-        print("✅ GarmentAnalyzer ready (using llama-3.2-11b-vision-preview)\n")
+        print("✅ GarmentAnalyzer ready (using meta-llama/llama-4-maverick-17b-128e-instruct)\n")
     
     async def analyze(self, image_data: str, session_id: str = "default") -> GarmentAnalysis:
         """
@@ -59,15 +59,15 @@ class GarmentAnalyzer:
 
 Analyze this garment image in detail. Provide:
 
-1. **Category & Type**: Identify the main category (Tops/Bottoms/Outerwear/Dress/Accessories) and specific type
-2. **Style Aesthetic**: List 2-4 style aesthetics (e.g., Minimalist, Streetwear, Bohemian, Formal, Vintage)
-3. **Cultural Elements**: Note any cultural or regional influences (if none, return empty list)
-4. **Vibe/Mood**: Describe 2-4 mood keywords (e.g., Relaxed, Professional, Edgy, Romantic)
-5. **Colors**: List the dominant colors
-6. **Patterns**: Identify patterns (Solid, Striped, Floral, etc.)
-7. **Preference Score**: Rate 0-100 based on versatility, trend relevance, and styling potential
-8. **Body Shape Tips**: Provide 3-5 tips on how this garment flatters different body shapes
-9. **Styling Suggestions**: Give 3-5 concrete styling ideas
+1. **Category & Type**: Identify the main category (Tops/Bottoms/Outerwear/Dress/Accessories) and specific type (e.g., 'Denim Jacket', 'Pleated Skirt').
+2. **Style Aesthetic**: List 3-5 style aesthetics. IMPORTANT: Format each as "Aspect: Detailed Description". Example: "Minimalist: Clean lines with lack of ornamentation focusing on form."
+3. **Cultural Elements**: Note any cultural or regional influences (if none, return empty list).
+4. **Vibe/Mood**: Describe 3-5 distinct moods or vibes. Be descriptive (e.g., "Effortlessly Chic", "Urban Industrial", "Romantic & Soft").
+5. **Colors**: List the dominant and accent colors with descriptive names (e.g., "Midnight Blue", "Burnt Orange", "Sage Green").
+6. **Patterns**: Identify patterns (Solid, Striped, Floral, etc.).
+7. **Preference Score**: Rate 0-100 based on versatility, trend relevance, and styling potential.
+8. **Body Shape Tips**: Provide 3-5 tips on how this garment flatters different body shapes.
+9. **Styling Suggestions**: Give 3-5 concrete styling ideas.
 
 Be specific, detailed, and fashion-forward in your analysis."""
 
@@ -92,7 +92,9 @@ Be specific, detailed, and fashion-forward in your analysis."""
             return analysis
             
         except Exception as e:
+            import traceback
             print(f"❌ Error during analysis: {str(e)}")
+            traceback.print_exc()
             # Return a fallback analysis
             print("🔄 Returning fallback analysis...")
             return GarmentAnalysis(

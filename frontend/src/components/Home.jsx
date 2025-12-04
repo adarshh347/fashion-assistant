@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Search, History, Settings, User, MoreHorizontal, Image as ImageIcon, Sparkles } from 'lucide-react';
+import { Camera, Search, History, Settings, User, MoreHorizontal, Image as ImageIcon, Sparkles, Shirt } from 'lucide-react';
+import WeatherSuggestions from './WeatherSuggestions';
 
 const IconItem = ({ icon: Icon, label, onClick, color }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -40,7 +41,7 @@ const IconItem = ({ icon: Icon, label, onClick, color }) => {
     );
 };
 
-const Home = ({ onOpenChat, onOpenGallery, onOpenStyleScan }) => {
+const Home = ({ onOpenChat, onOpenGallery, onOpenStyleScan, onOpenVirtualTryOn }) => {
     return (
         <div className="min-h-screen w-full bg-[#0d1b2a] text-white overflow-hidden relative font-sans selection:bg-teal-500/30">
             {/* Background Gradient - Xiaomi/MIUI Style */}
@@ -55,7 +56,7 @@ const Home = ({ onOpenChat, onOpenGallery, onOpenStyleScan }) => {
                     <IconItem icon={Sparkles} label="StyleScan" onClick={onOpenStyleScan} color="linear-gradient(135deg, #A855F7 0%, #EC4899 100%)" />
                     <IconItem icon={User} label="Profile" color="linear-gradient(135deg, #1DD1A1 0%, #10AC84 100%)" />
                     <IconItem icon={Settings} label="Settings" color="linear-gradient(135deg, #54A0FF 0%, #2E86DE 100%)" />
-                    <IconItem icon={MoreHorizontal} label="More" color="linear-gradient(135deg, #5F27CD 0%, #341F97 100%)" />
+                    <IconItem icon={Shirt} label="Try-On" onClick={onOpenVirtualTryOn} color="linear-gradient(135deg, #FF9F43 0%, #EE5A24 100%)" />
                 </div>
             </div>
 
@@ -99,6 +100,9 @@ const Home = ({ onOpenChat, onOpenGallery, onOpenStyleScan }) => {
                             <Camera className="text-white" size={24} />
                         </div>
                     </button>
+
+                    {/* Weather-Based Suggestions */}
+                    <WeatherSuggestions />
                 </motion.div>
             </main>
         </div>
