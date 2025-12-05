@@ -14,10 +14,7 @@ class HybridRecommendation(BaseModel):
     style_score: int = Field(..., ge=0, le=100, description="How well these styles complement each other")
 
 class GarmentAnalyzer:
-    """
-    Dedicated service for analyzing garment images using vision model.
-    Provides structured fashion analysis output.
-    """
+    
     
     def __init__(self):
         print("🎨 Initializing GarmentAnalyzer...")
@@ -28,7 +25,7 @@ class GarmentAnalyzer:
         )
         # Text model for hybrid recommendations
         self.text_llm = get_groq_chat_llm(
-            model_name="llama-3.3-70b-versatile",
+            model_name="openai/gpt-oss-120b",
             temperature=0.7
         )
         # Create structured output version

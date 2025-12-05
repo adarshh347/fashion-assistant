@@ -5,6 +5,7 @@ import ChatWindow from './components/ChatWindow';
 import Gallery from './components/Gallery';
 import StyleScan from './components/StyleScan';
 import VirtualTryOn from './components/VirtualTryOn';
+import TaraStylist from './components/TaraStylist';
 
 function App() {
 	const [activeView, setActiveView] = useState('home'); // 'home', 'chat', 'gallery', 'stylescan', 'tryon'
@@ -16,6 +17,7 @@ function App() {
 				onOpenGallery={() => setActiveView('gallery')}
 				onOpenStyleScan={() => setActiveView('stylescan')}
 				onOpenVirtualTryOn={() => setActiveView('tryon')}
+				onOpenTara={() => setActiveView('tara')}
 			/>
 
 			<AnimatePresence>
@@ -30,6 +32,9 @@ function App() {
 				)}
 				{activeView === 'tryon' && (
 					<VirtualTryOn onClose={() => setActiveView('home')} />
+				)}
+				{activeView === 'tara' && (
+					<TaraStylist onClose={() => setActiveView('home')} />
 				)}
 			</AnimatePresence>
 		</div>

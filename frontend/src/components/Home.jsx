@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Search, History, Settings, User, MoreHorizontal, Image as ImageIcon, Sparkles, Shirt } from 'lucide-react';
+import { Camera, Search, History, Settings, User, MoreHorizontal, Image as ImageIcon, Sparkles, Shirt, Gem } from 'lucide-react';
 import WeatherSuggestions from './WeatherSuggestions';
 
 const IconItem = ({ icon: Icon, label, onClick, color }) => {
@@ -41,7 +41,7 @@ const IconItem = ({ icon: Icon, label, onClick, color }) => {
     );
 };
 
-const Home = ({ onOpenChat, onOpenGallery, onOpenStyleScan, onOpenVirtualTryOn }) => {
+const Home = ({ onOpenChat, onOpenGallery, onOpenStyleScan, onOpenVirtualTryOn, onOpenTara }) => {
     return (
         <div className="min-h-screen w-full bg-[#0d1b2a] text-white overflow-hidden relative font-sans selection:bg-teal-500/30">
             {/* Background Gradient - Xiaomi/MIUI Style */}
@@ -54,7 +54,7 @@ const Home = ({ onOpenChat, onOpenGallery, onOpenStyleScan, onOpenVirtualTryOn }
                     <IconItem icon={History} label="History" color="linear-gradient(135deg, #FF6B6B 0%, #EE5253 100%)" />
                     <IconItem icon={ImageIcon} label="Gallery" onClick={onOpenGallery} color="linear-gradient(135deg, #48DBFB 0%, #0ABDE3 100%)" />
                     <IconItem icon={Sparkles} label="StyleScan" onClick={onOpenStyleScan} color="linear-gradient(135deg, #A855F7 0%, #EC4899 100%)" />
-                    <IconItem icon={User} label="Profile" color="linear-gradient(135deg, #1DD1A1 0%, #10AC84 100%)" />
+                    <IconItem icon={Gem} label="Tara" onClick={onOpenTara} color="linear-gradient(135deg, #F472B6 0%, #9333EA 100%)" />
                     <IconItem icon={Settings} label="Settings" color="linear-gradient(135deg, #54A0FF 0%, #2E86DE 100%)" />
                     <IconItem icon={Shirt} label="Try-On" onClick={onOpenVirtualTryOn} color="linear-gradient(135deg, #FF9F43 0%, #EE5A24 100%)" />
                 </div>
